@@ -1,6 +1,2 @@
-echo "# event-management" >> README.md
-git init
-git add README.md
-git commit -m "first commit"
-git remote add origin https://github.com/navitkalangutkar/event-management.git
-git push -u origin master
+# event-management
+Event Management System
