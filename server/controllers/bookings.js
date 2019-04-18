@@ -4,6 +4,7 @@ const events = require('../models').events;
 const managers = require('../models').managers;
 const moment = require('moment')
 //const Sequelize= require('sequelize')
+const { Op } = require("sequelize");
 const Test = require('../models/index')
 
 module.exports =
@@ -152,59 +153,84 @@ module.exports =
           }
         })
       },
-      upcomingEvents(req, res)
+      todayEvents(req, res) 
       {
-        var takeDate = new Date(req.body.takeDate);
-        //var dattess = takeDate.getUTCDate();
-        //var date = moment(dattess).format("YYYY-MM-DD");
-        booking.findAll({
-          where: { bookingDate:takeDate}
-        })
-        .then(function(bookings){
-          if(!bookings){
-            res.send("No event was there on given Date");
-          }
-          else{
-            res.send(bookings)
-          }
-        })
+        Test.sequelize.query('CALL getUpcomingEvents()',
+      { 
+      type: Test.sequelize.QueryTypes.SELECT 
+      })    
+      .then(function (data) 
+      {       
+        if (data) { 
+                   res.send(data)      
+                  } 
+                  else {          
+                          return res.status(404).send({ message: 'There is no Event on today date'})   
+                        }      
+                  })  
       },
-      comingEvents(req, res)
+      tomorrowEvents(req, res) 
       {
-        var todayDate = new Date(req.body.todayDate);
-        booking.findAll({
-          where: { bookingDate:todayDate}
-        })
-        .then(function(bookings){
-          if(bookings)
-          {
-            res.send(bookings)
-          }
-          else {
-         /*   var tomorrow = moment(todayDate).add('days',1);
-            booking.findAll({
-              where: { bookingDate:tomorrow}
-            })
-            .then(function(bookings){
-              if(bookings)
-              {
-                res.send(bookings)
-              }
-              else {*/
-            res.send("no bookings found")
-          }
-        });
- /*   })
-       let datetome= new Date(req.body.datetome);
-   //     datetome = moment(datetome).format("YYYY-MM-DD");
-        function getWeekDay(datetome){
-        let days = ['sunday', 'munday', 'tuseday','wenesday','thusday','friday','saturday'];
-          return days[datetome.getDay()];
+        Test.sequelize.query('CALL getTomorrowEvents()',
+      { 
+      type: Test.sequelize.QueryTypes.SELECT 
+      })    
+      .then(function (data) 
+      {       
+        if (data) { 
+                   res.send(data)      
+                  } 
+                  else {          
+                          return res.status(404).send({ message: 'There is no Event on tomorrow date'})   
+                        }      
+                  })  
+      },
+      weekEvents(req, res) 
+      {
+        Test.sequelize.query('CALL getUpcomingWeekEvents()',
+      { 
+      type: Test.sequelize.QueryTypes.SELECT 
+      })    
+      .then(function (data) 
+      {       
+        if (data) { 
+                   res.send(data)      
+                  } 
+                  else {          
+                          return res.status(404).send({ message: 'There is no Event on this week'})   
+                        }      
+                  })  
+      },
+      monthEvents(req, res) 
+      {
+        Test.sequelize.query('CALL getUpcomingMonthEvents()',
+      { 
+      type: Test.sequelize.QueryTypes.SELECT 
+      })    
+      .then(function (data) 
+      {       
+        if (data) { 
+                   res.send(data)      
+                  } 
+                  else {          
+                          return res.status(404).send({ message: 'There is no Event on this Month'})   
+                        }      
+                  })  
+      },
+      yearEvents(req, res)
+      {
+        Test.sequelize.query('CALL getUpcomingYearEvents(:dateOfMgr)',
+      { replacements: { dateOfMgr: req.params.dateofMgr }, 
+      type: Test.sequelize.QueryTypes.SELECT 
+      })    
+      .then(function (data) 
+      {       
+        if (data) { 
+                   res.send(data)      
+                  } 
+                  else {          
+                          return res.status(404).send({ message: 'There is no event on this year right now!'})   
+                        }      
+                  })  
       }
-         booking.findAll({
-           where: {bookingDate:getWeekDay(datetome)}
-         })
-        .then(bookings => res.status(200).send(bookings))
-        .catch(error => res.status(400).send(error));*/
-      },
   };

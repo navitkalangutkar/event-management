@@ -31,7 +31,10 @@ module.exports = (app) =>
     app.put('/api/booking/:id', bookingsController.update);     // to update booking   
     app.delete('/api/booking/:id', bookingsController.destroy); // to delete booking
     app.get('/api/booking/available/:dateofMgr', bookingsController.findAvailableMgrByDate);
-    app.post('/api/booking/dates', bookingsController.availableDates); 
-    app.post('/api/booking/upcoming', bookingsController.upcomingEvents);
-    app.post('/api/booking/comings',bookingsController.comingEvents);
+    app.post('/api/booking/dates', bookingsController.availableDates); // free dates available for event
+    app.get('/api/booking/Today', bookingsController.todayEvents);// events on today date
+    app.get('/api/booking/Tomorrow', bookingsController.tomorrowEvents);// tomorrow events
+    app.get('/api/booking/Week', bookingsController.weekEvents);// week events
+    app.get('/api/booking/Month', bookingsController.monthEvents);// month events
+    app.get('/api/booking/year/:dateofMgr', bookingsController.yearEvents);
   };
